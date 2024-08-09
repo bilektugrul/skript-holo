@@ -1,8 +1,5 @@
 package me.blueyescat.skriptholo.skript.conditions;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -12,10 +9,10 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
-import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Is Text/Item Line")
 @Description("Checks whether the given hologram line is a text line or an item line. " +
@@ -47,9 +44,9 @@ public class CondIsHologramLineTextItem extends Condition {
 	@Override
 	public boolean check(Event e) {
 		if (isText)
-			return lines.check(e, line -> line instanceof TextLine, isNegated());
+			return lines.check(e, line -> line.getType() == HologramLineType.TEXT, isNegated());
 		else
-			return lines.check(e, line -> line instanceof ItemLine, isNegated());
+			return lines.check(e, line -> line.getType() == HologramLineType.ICON, isNegated());
 	}
 
 	@Override

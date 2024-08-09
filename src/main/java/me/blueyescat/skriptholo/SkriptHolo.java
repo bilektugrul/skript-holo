@@ -1,24 +1,17 @@
 package me.blueyescat.skriptholo;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
+import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptAddon;
+import ch.njol.skript.util.Direction;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import me.blueyescat.skriptholo.util.Metrics;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptAddon;
-import ch.njol.skript.util.Direction;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-
-import me.blueyescat.skriptholo.util.Metrics;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SkriptHolo extends JavaPlugin implements Listener {
 
@@ -54,8 +47,8 @@ public class SkriptHolo extends JavaPlugin implements Listener {
 		Metrics metrics = new Metrics(getInstance());
 		metrics.addCustomChart(new Metrics.SimplePie("skript_version", () ->
 				Skript.getInstance().getDescription().getVersion()));
-		metrics.addCustomChart(new Metrics.SimplePie("holographicdisplays_version", () ->
-				getServer().getPluginManager().getPlugin("HolographicDisplays").getDescription().getVersion()));
+		metrics.addCustomChart(new Metrics.SimplePie("decentholograms_version", () ->
+				getServer().getPluginManager().getPlugin("DecentHolograms").getDescription().getVersion()));
 		getLogger().info("Started metrics!");
 		getLogger().info("Finished loading!");
 	}

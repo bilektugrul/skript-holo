@@ -1,12 +1,5 @@
 package me.blueyescat.skriptholo.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -22,14 +15,18 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
-import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
-
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import me.blueyescat.skriptholo.skript.Types;
 import me.blueyescat.skriptholo.util.Utils;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Name("Hologram Lines")
 @Description({"Returns lines of a hologram. Can be changed, removing a text or an item means it will search lines " +
@@ -90,7 +87,7 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 				// First/Last Line
 				} else {
 					int line = firstLine.isTrue() ? 0 : holo.size() - 1;
-					lines.add(holo.getLine(line));
+					lines.add(holo.getPage(0).getLine(line));
 				}
 			// Line x
 			} else {
@@ -100,7 +97,7 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 				int li = line.intValue() - 1;
 				if (!(li >= 0 && li < holo.size()))
 					continue;
-				lines.add(holo.getLine(li));
+				lines.add(holo.getPage(0).getLine(li));
 			}
 		}
 		return lines.toArray(new HologramLine[0]);
@@ -132,14 +129,14 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 			switch (mode) {
 				case ADD:
 					for (Hologram holo : holograms.getArray(e)) {
-						if (holo.isDeleted())
+						if (holo.isDisabled())
 							continue;
 						for (Object o : delta) {
 							if (o instanceof String) {
-								holo.appendTextLine((String) o);
+								DHAPI.addHologramLine(holo, (String) o);
 							} else {
 								for (ItemStack item : ((ItemType) o).getItem().getAll())
-									holo.appendItemLine(item);
+									DHAPI.addHologramLine(holo, item);
 							}
 						}
 					}
@@ -148,21 +145,21 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 				case REMOVE_ALL:
 					HologramLine removedLine;
 					for (Hologram holo : holograms.getArray(e)) {
-						if (holo.isDeleted())
+						if (holo.isDisabled())
 							continue;
 						for (int line = 0; line < holo.size(); line++) {
-							removedLine = holo.getLine(line);
+							removedLine = holo.getPage(0).getLine(line);
 							for (Object o : delta) {
 								if (o instanceof String) {
-									if (removedLine instanceof TextLine) {
-										if (Comparators.compare(((TextLine) removedLine).getText(), o).is(Comparator.Relation.EQUAL))
-											removedLine.removeLine();
+									if (removedLine.getType() == HologramLineType.TEXT) {
+										if (Comparators.compare(removedLine.getText(), o).is(Comparator.Relation.EQUAL))
+											removedLine.delete();
 									}
 								} else {
-									if (removedLine instanceof ItemLine) {
+									if (removedLine.getType() == HologramLineType.ICON) {
 										for (ItemStack item : ((ItemType) o).getItem().getAll()) {
-											if (Comparators.compare(((ItemLine) removedLine).getItemStack(), item).is(Comparator.Relation.EQUAL))
-												removedLine.removeLine();
+											if (Comparators.compare(removedLine.getItem().getMaterial(), item.getType()).is(Comparator.Relation.EQUAL))
+												removedLine.delete();
 										}
 									}
 								}
@@ -172,15 +169,16 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 					break;
 				case SET:
 					for (Hologram holo : holograms.getArray(e)) {
-						if (holo.isDeleted())
+						if (holo.isDisabled())
 							continue;
-						holo.clearLines();
+						holo.removePage(0);
+						holo.addPage();
 						for (Object o : delta) {
 							if (o instanceof String) {
-								holo.appendTextLine((String) o);
+								DHAPI.addHologramLine(holo, (String) o);
 							} else {
 								for (ItemStack item : ((ItemType) o).getItem().getAll())
-									holo.appendItemLine(item);
+									DHAPI.addHologramLine(holo, item);
 							}
 						}
 					}
@@ -188,8 +186,10 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 				case DELETE:
 				case RESET:
 					for (Hologram holo : holograms.getArray(e)) {
-						if (!holo.isDeleted())
-							holo.clearLines();
+						if (!holo.isDisabled()) {
+							holo.removePage(0);
+							holo.addPage();
+						}
 					}
 			}
 		// Single lines will use changers of the HologramLine type
@@ -202,19 +202,19 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 					if (li <= 0)
 						return;
 					for (Hologram holo : holograms.getArray(e)) {
-						if (holo.isDeleted())
+						if (holo.isDisabled())
 							continue;
 						if (li > holo.size()) {
 							int size = holo.size();
 							for (int i = 0; i < ((li - 1) - size); i++)
-								holo.appendTextLine("");
+								DHAPI.addHologramLine(holo, "");
 							Object o = delta[0];
 							if (o instanceof String)
-								holo.appendTextLine((String) o);
+								DHAPI.addHologramLine(holo, (String) o);
 							else
-								holo.appendItemLine(((ItemType) o).getItem().getRandom());
+								DHAPI.addHologramLine(holo, ((ItemType) o).getItem().getRandom());
 						} else {
-							Types.hologramLineChanger.change(CollectionUtils.array(holo.getLine(li - 1)), delta, ChangeMode.SET);
+							Types.hologramLineChanger.change(CollectionUtils.array(holo.getPage(0).getLine(li - 1)), delta, ChangeMode.SET);
 						}
 					}
 				}

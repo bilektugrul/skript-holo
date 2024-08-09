@@ -1,23 +1,16 @@
 package me.blueyescat.skriptholo.skript.effects;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.blueyescat.skriptholo.util.Utils;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Hologram Visibility")
 @Description("Changes visibility of a hologram for the given players or makes a hologram invisible/visible by default." +
@@ -88,26 +81,29 @@ public class EffHologramVisibility extends Effect {
 				for (Player player : players.getArray(e)) {
 					for (Hologram holo : holograms.getArray(e)) {
 						if (mode == Modes.REVEAL)
-							holo.getVisibilityManager().showTo(player);
+							holo.setShowPlayer(player);
 						else
-							holo.getVisibilityManager().hideTo(player);
+							holo.setHidePlayer(player);
 					}
 				}
 				break;
 			case RESET:
 				for (Player player : players.getArray(e)) {
 					for (Hologram holo : holograms.getArray(e))
-						holo.getVisibilityManager().resetVisibility(player);
+						if (holo.isDefaultVisibleState())
+							holo.setShowPlayer(player);
+						else
+							holo.setHidePlayer(player);
 				}
 				break;
 			case RESET_ALL:
 				for (Hologram holo : holograms.getArray(e))
-					holo.getVisibilityManager().resetVisibilityAll();
+					holo.showAll();
 				break;
 			case DEFAULT_INVISIBLE:
 			case DEFAULT_VISIBLE:
 				for (Hologram holo : holograms.getArray(e))
-					holo.getVisibilityManager().setVisibleByDefault(mode == Modes.DEFAULT_VISIBLE);
+					holo.setDefaultVisibleState(mode == Modes.DEFAULT_VISIBLE);
 		}
 	}
 

@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'me.blueyescat.skriptholo'
-version '1.0.2'
+version '1.0.3-dh'
 
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
@@ -14,28 +14,24 @@ compileTestJava.options.encoding = 'UTF-8'
 repositories {
 	jcenter()
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
+	maven { url 'https://repo.skriptlang.org/releases' }
 	maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
 	maven { url 'https://oss.sonatype.org/content/groups/public' }
-	maven { url 'http://nexus.hc.to/content/repositories/pub_releases' }
-	maven { url 'http://maven.sk89q.com/repo' }
-	maven { url 'https://repo.destroystokyo.com/repository/maven-public' }
-	maven { url 'https://ci.filoghost.me/plugin/repository/everything' }
-	maven { url 'http://repo.dmulloy2.net/nexus/repository/public/' }
-	maven { url 'https://jitpack.io' }
+	maven { url 'https://nexus.hc.to/content/repositories/pub_releases' }
+	maven { url 'https://maven.enginehub.org/repo' }
+	maven { url 'https://repo.papermc.io/repository/maven-public/' }
+	maven { url 'https://repo.dmulloy2.net/repository/public/' }
+
 }
 
 dependencies {
 	implementation 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
 	implementation 'com.github.SkriptLang:Skript:dev36'
-	implementation 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.3.2'
-	implementation 'com.comphenix.protocol:ProtocolLib:4.4.0'
-    compile fileTree(include: ['*.jar'], dir: 'lib')
+	compileOnly 'com.github.DecentSoftware-eu:DecentHolograms:2.8.9'
+	implementation 'com.comphenix.protocol:ProtocolLib:5.1.0'
 }
 
 processResources {
 	filter(ReplaceTokens, tokens: [version: version])
-}
-
-jar {
-	archiveName = "skript-holo.$extension"
 }

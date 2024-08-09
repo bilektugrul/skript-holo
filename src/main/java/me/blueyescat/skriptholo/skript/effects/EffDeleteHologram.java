@@ -1,8 +1,5 @@
 package me.blueyescat.skriptholo.skript.effects;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -12,10 +9,10 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.blueyescat.skriptholo.util.Utils;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Delete Hologram")
 @Description({"Deletes a hologram. The hologram type has the delete changer already, but this effect exists for variables. " +

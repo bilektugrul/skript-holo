@@ -1,8 +1,5 @@
 package me.blueyescat.skriptholo.skript.conditions;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -12,8 +9,9 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Is Hologram Deleted")
 @Description("Checks whether the given hologram is deleted. " +
@@ -41,7 +39,7 @@ public class CondIsHologramDeleted extends Condition {
 
 	@Override
 	public boolean check(Event e) {
-		return holograms.check(e, Hologram::isDeleted, isNegated());
+		return holograms.check(e, Hologram::isDisabled, isNegated());
 	}
 
 	@Override

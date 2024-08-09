@@ -5,7 +5,7 @@ version: @version@
 author: Blueyescat
 website: https://github.com/Blueyescat/skript-holo
 
-depend: [Skript, HolographicDisplays]
+depend: [Skript, DecentHolograms]
 softdepend: [ProtocolLib]
 
 main: me.blueyescat.skriptholo.SkriptHolo

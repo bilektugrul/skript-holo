@@ -1,27 +1,16 @@
 package me.blueyescat.skriptholo.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import ch.njol.skript.util.Direction;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import me.blueyescat.skriptholo.SkriptHolo;
+import me.blueyescat.skriptholo.skript.effects.EffCreateHologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
-import ch.njol.skript.util.Direction;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.line.CollectableLine;
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
-import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
-import com.gmail.filoghost.holographicdisplays.api.line.TouchableLine;
-
-import me.blueyescat.skriptholo.SkriptHolo;
-import me.blueyescat.skriptholo.SkriptHolo;
-import me.blueyescat.skriptholo.skript.effects.EffCreateHologram;
+import java.util.*;
 
 public class Utils {
 
@@ -36,14 +25,14 @@ public class Utils {
 	public static List<HologramLine> getHologramLines(Hologram holo) {
 		List<HologramLine> lines = new ArrayList<>();
 		for (int l = 0; l < holo.size(); l++)
-			lines.add(holo.getLine(l));
+			lines.add(holo.getPage(0).getLine(l));
 		return lines;
 	}
 
 	@SuppressWarnings("unchecked")
 	public static void deleteHologram(Integer entityID, Hologram... holograms) {
 		for (Hologram holo : holograms) {
-			if (!holo.isDeleted())
+			if (!holo.isDisabled())
 				holo.delete();
 			if (holo.equals(EffCreateHologram.lastCreated))
 				EffCreateHologram.lastCreated = null;
@@ -99,7 +88,7 @@ public class Utils {
 			Entity entity = (Entity) entry.getKey();
 			if (!entity.isValid()) {
 				for (Hologram holo : (List<Hologram>) entry.getValue()) {
-					if (!holo.isDeleted())
+					if (!holo.isDisabled())
 						holo.delete();
 					if (holo.equals(EffCreateHologram.lastCreated))
 						EffCreateHologram.lastCreated = null;
@@ -136,8 +125,8 @@ public class Utils {
 		SkriptHolo.followingHologramsEntities.put(entity, holoList);
 
 		Location location = entity.getLocation().clone();
-		if (holo.getWorld() == location.getWorld())
-			holo.teleport(offset != null ? offsetLocation(location, offset) : location);
+		if (holo.getLocation().getWorld() == location.getWorld())
+			holo.setLocation(offset != null ? offsetLocation(location, offset) : location);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -169,28 +158,6 @@ public class Utils {
 
 	public static boolean isFollowingHologram(Hologram holo) {
 		return SkriptHolo.followingHologramsList.contains(holo);
-	}
-
-	public static void addTouchHandler(HologramLine line) {
-		TouchableLine tl = (TouchableLine) line;
-		if (tl.getTouchHandler() == null) {
-			tl.setTouchHandler(player -> {
-				HologramLineTouchEvent event = new HologramLineTouchEvent(player, tl);
-				Bukkit.getPluginManager().callEvent(event);
-			});
-		}
-	}
-
-	public static void addPickupHandler(HologramLine line) {
-		if (!(line instanceof ItemLine))
-			return;
-		CollectableLine tl = (CollectableLine) line;
-		if (tl.getPickupHandler() == null) {
-			tl.setPickupHandler(player -> {
-				HologramLinePickupEvent event = new HologramLinePickupEvent(player, tl);
-				Bukkit.getPluginManager().callEvent(event);
-			});
-		}
 	}
 
 }

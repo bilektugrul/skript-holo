@@ -1,11 +1,5 @@
 package me.blueyescat.skriptholo.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -16,9 +10,13 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
+import java.util.ArrayList;
+import java.util.List;
 
 @Name("Parent Hologram of Hologram Line")
 @Description("Returns the parent hologram of a hologram line.")
@@ -45,7 +43,7 @@ public class ExprHologramLineParent extends SimpleExpression<Hologram> {
 	protected Hologram[] get(Event e) {
 		List<Hologram> holograms = new ArrayList<>();
 		for (HologramLine line : lines.getArray(e))
-			holograms.add(line.getParent());
+			holograms.add(line.getParent().getParent());
 		return holograms.toArray(new Hologram[0]);
 	}
 

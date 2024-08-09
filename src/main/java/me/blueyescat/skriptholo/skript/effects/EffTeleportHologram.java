@@ -1,9 +1,5 @@
 package me.blueyescat.skriptholo.skript.effects;
 
-import org.bukkit.Location;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -14,8 +10,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Teleport Hologram")
 @Description("Teleports a hologram to a specific location.")
@@ -46,8 +44,8 @@ public class EffTeleportHologram extends Effect {
 		if (location == null)
 			return;
 		for (Hologram holo : holograms.getArray(e)) {
-			if (!holo.isDeleted())
-				holo.teleport(location);
+			if (!holo.isDisabled())
+				holo.setLocation(location);
 		}
 	}
 

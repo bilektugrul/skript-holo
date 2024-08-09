@@ -1,8 +1,5 @@
 package me.blueyescat.skriptholo.skript;
 
-import org.bukkit.Location;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
@@ -12,13 +9,15 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.util.coll.CollectionUtils;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
-import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
-
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
+import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import me.blueyescat.skriptholo.util.Utils;
+import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 public class Types {
 
@@ -48,8 +47,9 @@ public class Types {
 							Utils.deleteHologram(holograms);
 						} else {
 							for (Hologram holo : holograms) {
-								if (!holo.isDeleted())
-									holo.clearLines();
+								if (!holo.isDisabled())
+									holo.removePage(0);
+									holo.addPage();
 							}
 						}
 					}
@@ -92,37 +92,37 @@ public class Types {
 			public void change(HologramLine[] lines, @Nullable Object[] delta, ChangeMode mode) {
 				if (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
 					for (HologramLine line : lines)
-						line.removeLine();
+						line.delete();
 				} else {
 					for (HologramLine line : lines) {
 						Object o = delta[0];
 						if (o instanceof String) {
-							if (line instanceof TextLine) {
-								((TextLine) line).setText((String) o);
+							if (line.getType() == HologramLineType.TEXT) {
+								line.setText((String) o);
 							// Find the line and make it TextLine
 							} else {
-								Hologram holo = line.getParent();
+								Hologram holo = line.getParent().getParent();
 								int i = 0;
 								for (HologramLine l : Utils.getHologramLines(holo)) {
 									if (l.equals(line)) {
-										line.removeLine();
-										holo.insertTextLine(i, (String) o);
+										line.delete();
+										DHAPI.insertHologramLine(holo, i, (String) o);
 									}
 									i++;
 								}
 							}
 
 						} else {
-							if (line instanceof ItemLine) {
-								((ItemLine) line).setItemStack(((ItemType) o).getItem().getRandom());
+							if (line.getType() == HologramLineType.ICON) {
+								line.setItem(HologramItem.fromItemStack(((ItemType) o).getItem().getRandom()));
 							// Find the line and make it ItemLine
 							} else {
-								Hologram holo = line.getParent();
+								Hologram holo = line.getParent().getParent();
 								int i = 0;
 								for (HologramLine l : Utils.getHologramLines(holo)) {
 									if (l.equals(line)) {
-										line.removeLine();
-										holo.insertItemLine(i, ((ItemType) o).getItem().getRandom());
+										line.delete();
+										DHAPI.insertHologramLine(holo, i, ((ItemType) o).getItem().getRandom());
 									}
 									i++;
 								}
@@ -153,14 +153,14 @@ public class Types {
 
 					@Override
 					public String toString(HologramLine line, int flags) {
-						if (line instanceof ItemLine)
+						if (line.getType() == HologramLineType.ICON)
 							return "hologram item line";
 						return "hologram line";
 					}
 
 					@Override
 					public String toVariableNameString(HologramLine line) {
-						if (line instanceof ItemLine)
+						if (line.getType() == HologramLineType.ICON)
 							return "hologram item line";
 						return "hologram line";
 					}
@@ -171,17 +171,11 @@ public class Types {
 					}
 				}));
 
-		Converters.registerConverter(TextLine.class, String.class, (Converter<TextLine, String>) TextLine::getText);
-		Converters.registerConverter(ItemLine.class, ItemType.class, (Converter<ItemLine, ItemType>) line ->
-				new ItemType(line.getItemStack()));
-		Converters.registerConverter(HologramLine.class, Number.class, (Converter<HologramLine, Number>) line -> {
-			Hologram holo = line.getParent();
-			for (int l = 0; l < holo.size(); l++) {
-				if (holo.getLine(l).equals(line))
-					return l + 1;
-			}
-			return null;
-		});
+		Converters.registerConverter(HologramLine.class, String.class, (Converter<HologramLine, String>) line -> line.getType() == HologramLineType.TEXT ? line.getText() : null);
+		Converters.registerConverter(HologramLine.class, ItemType.class, (Converter<HologramLine, ItemType>) line -> line.getType() == HologramLineType.ICON
+				? new ItemType(line.getItem().getMaterial().getId()) : null);
+		Converters.registerConverter(HologramLine.class, Number.class, (Converter<HologramLine, Number>) line -> line.getType() == HologramLineType.TEXT
+				? Double.parseDouble(line.getText()) : null);
 
 	}
 

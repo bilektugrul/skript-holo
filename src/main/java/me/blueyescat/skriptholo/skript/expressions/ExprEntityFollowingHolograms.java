@@ -1,28 +1,21 @@
 package me.blueyescat.skriptholo.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.blueyescat.skriptholo.SkriptHolo;
 import me.blueyescat.skriptholo.util.Utils;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Name("Following Holograms of Entity")
 @Description("Returns the following holograms of an entity. " +

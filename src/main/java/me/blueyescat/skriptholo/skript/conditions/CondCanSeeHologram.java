@@ -1,23 +1,16 @@
 package me.blueyescat.skriptholo.skript.conditions;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.blueyescat.skriptholo.util.Utils;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Can See Hologram")
 @Description("Checks whether the given players can see the given holograms. " +
@@ -63,7 +56,7 @@ public class CondCanSeeHologram extends Condition {
 	public boolean check(Event e) {
 		return players.check(e, player ->
 				holograms.check(e, holo ->
-						holo.getVisibilityManager().isVisibleTo(player)
+						holo.canShow(player)
 				), isNegated());
 	}
 

@@ -2,6 +2,8 @@ package me.blueyescat.skriptholo;
 
 import java.util.Map;
 
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -22,8 +24,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
-import com.gmail.filoghost.holographicdisplays.HolographicDisplays;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
+
 
 import me.blueyescat.skriptholo.util.Utils;
 
@@ -38,7 +39,7 @@ public class FollowingHologramListeners implements Listener {
 
 		Bukkit.getPluginManager().registerEvents(new FollowingHologramListeners(), SkriptHolo.getInstance());
 		if (entityRemoveEventExists)
-			Bukkit.getPluginManager().registerEvents(new FollowingHologramListeners.EntityRemoveListener(), SkriptHolo.getInstance());
+			Bukkit.getPluginManager().registerEvents(new EntityRemoveListener(), SkriptHolo.getInstance());
 
 		ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
@@ -49,29 +50,42 @@ public class FollowingHologramListeners implements Listener {
 					public void onPacketSending(PacketEvent event) {
 						int entityID = event.getPacket().getIntegers().read(0);
 						Map<Hologram, Direction[]> holoMap = SkriptHolo.followingHolograms.get(entityID);
-						if (holoMap == null || holoMap.isEmpty())
+						if (holoMap == null || holoMap.isEmpty()) {
+							//Bukkit.getScheduler().runTask(plugin, () -> Bukkit.broadcastMessage("1"));
 							return;
+						}
 						for (Object o : holoMap.entrySet()) {
 							Map.Entry entry = (Map.Entry) o;
 							Hologram holo = (Hologram) entry.getKey();
-							if (holo.isDeleted()) {
+							if (holo.isDisabled()) {
+								//Bukkit.getScheduler().runTask(plugin, () -> Bukkit.broadcastMessage("2"));
 								holoMap.remove(holo);
 								continue;
 							}
 							Player player = event.getPlayer();
-							Entity entity;
+							Entity entity = null;
 							try {
+								//Bukkit.getScheduler().runTask(plugin, () -> Bukkit.broadcastMessage("try"));
 								entity = event.getPacket().getEntityModifier(event).read(0);
-							} catch (Exception e) {
-								// Use HolographicDisplays' workaround for the ProtocolLib bug
-								entity = HolographicDisplays.getNMSManager()
-										.getEntityFromID(player.getWorld(), event.getPacket().getIntegers().read(0));
+							} catch (Exception ex) {
+								//Bukkit.getScheduler().runTask(plugin, () -> Bukkit.broadcastMessage("catch"));
+								ex.printStackTrace();
 							}
-							if (player.equals(entity) && !holo.getVisibilityManager().isVisibleTo(player))
+
+							if (entity == null) {
+								//Bukkit.getScheduler().runTask(plugin, () -> Bukkit.broadcastMessage("null"));
 								continue;
+							}
+
+							if (player.equals(entity) && holo.getHidePlayers().contains(player)) {
+								//Bukkit.getScheduler().runTask(plugin, () -> Bukkit.broadcastMessage("anan"));
+								continue;
+							}
 							Location location = entity.getLocation().clone();
-							if (holo.getWorld() == location.getWorld() && holo.getLocation().distance(location) != 0)
-								holo.teleport(entry.getValue() != null ? Utils.offsetLocation(location, (Direction[]) entry.getValue()) : location);
+							if (holo.getLocation().getWorld() == location.getWorld() && holo.getLocation().distance(location) != 0) {
+								//Bukkit.getScheduler().runTask(plugin, () -> Bukkit.broadcastMessage("location"));
+								DHAPI.moveHologram(holo, entry.getValue() != null ? Utils.offsetLocation(location, (Direction[]) entry.getValue()) : location);
+							}
 						}
 					}
 				});
@@ -97,7 +111,7 @@ public class FollowingHologramListeners implements Listener {
 				}
 			}.runTaskTimerAsynchronously(SkriptHolo.getInstance(), 0, 20 * 5);
 
-			Bukkit.getPluginManager().registerEvents(new FollowingHologramListeners.EntityDeathListener(), SkriptHolo.getInstance());
+			Bukkit.getPluginManager().registerEvents(new EntityDeathListener(), SkriptHolo.getInstance());
 		}
 	}
 
@@ -105,23 +119,33 @@ public class FollowingHologramListeners implements Listener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		int entityID = event.getPlayer().getEntityId();
 		Map<Hologram, Direction[]> holoMap = SkriptHolo.followingHolograms.get(entityID);
-		if (holoMap == null || holoMap.isEmpty())
+		if (holoMap == null || holoMap.isEmpty()) {
+			//Bukkit.broadcastMessage("1");
 			return;
+		}
 		for (Object o : holoMap.entrySet()) {
 			Map.Entry entry = (Map.Entry) o;
 			Hologram holo = (Hologram) entry.getKey();
-			if (holo.isDeleted()) {
+			if (holo.isDisabled()) {
 				holoMap.remove(holo);
+				//Bukkit.broadcastMessage("remove");
 				return;
 			}
 			Player player = event.getPlayer();
-			if (!holo.getVisibilityManager().isVisibleTo(player))
+			if (holo.getHidePlayers().contains(player)) {
+				//Bukkit.broadcastMessage("hidden");
 				return;
-			if (event.getTo() == null)
+			}
+			if (event.getTo() == null) {
+				//Bukkit.broadcastMessage("null getto");
 				return;
+			}
+
 			Location location = event.getTo().clone();
-			if (holo.getWorld() == location.getWorld() && holo.getLocation().distance(location) != 0)
-				holo.teleport(entry.getValue() != null ? Utils.offsetLocation(location, (Direction[]) entry.getValue()) : location);
+			if (holo.getLocation().getWorld() == location.getWorld() && holo.getLocation().distance(location) != 0) {
+				//Bukkit.broadcastMessage("son son");
+				DHAPI.moveHologram(holo, entry.getValue() != null ? Utils.offsetLocation(location, (Direction[]) entry.getValue()) : location);
+			}
 		}
 	}
 

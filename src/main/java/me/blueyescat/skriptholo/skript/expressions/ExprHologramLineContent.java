@@ -1,12 +1,5 @@
 package me.blueyescat.skriptholo.skript.expressions;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -22,12 +15,15 @@ import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
-import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
-
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import me.blueyescat.skriptholo.skript.Types;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 @Name("Hologram Line Content")
 @Description({"Returns content (text or item) of a hologram line. " +
@@ -86,12 +82,12 @@ public class ExprHologramLineContent<T> extends SimpleExpression<T> {
 	protected T[] get(Event e) {
 		List<Object> contents = new ArrayList<>();
 		for (HologramLine line : lines.getArray(e)) {
-			if (line instanceof TextLine) {
+			if (line.getType() == HologramLineType.TEXT) {
 				if (type == 0 || type == 1)
-					contents.add(((TextLine) line).getText());
-			} else if (line instanceof ItemLine) {
+					contents.add(line.getText());
+			} else if (line.getType() == HologramLineType.ICON) {
 				if (type == 0 || type == 2)
-					contents.add(new ItemType(((ItemLine) line).getItemStack()));
+					contents.add(new ItemType(line.getItem().getMaterial().getId()));
 			}
 		}
 		try {

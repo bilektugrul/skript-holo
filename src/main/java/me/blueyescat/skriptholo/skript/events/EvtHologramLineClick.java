@@ -1,24 +1,20 @@
 package me.blueyescat.skriptholo.skript.events;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
-
-import me.blueyescat.skriptholo.util.HologramLineTouchEvent;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.event.HologramClickEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 
 public class EvtHologramLineClick extends SkriptEvent {
 
 	static {
-		Skript.registerEvent("Hologram Line Click", EvtHologramLineClick.class, HologramLineTouchEvent.class,
+		Skript.registerEvent("Hologram Line Click", EvtHologramLineClick.class, HologramClickEvent.class,
 				"holo[gram] [line] click")
 				.description("Called when a player clicks on a hologram line. " +
 						"See the `Make Hologram Line Click-able` effect.")
@@ -26,22 +22,16 @@ public class EvtHologramLineClick extends SkriptEvent {
 						"\tif event-hologram-line is \"test\":")
 				.since("1.0.0");
 
-		EventValues.registerEventValue(HologramLineTouchEvent.class, Player.class, new Getter<Player, HologramLineTouchEvent>() {
+		EventValues.registerEventValue(HologramClickEvent.class, Player.class, new Getter<Player, HologramClickEvent>() {
 			@Override
-			public Player get(HologramLineTouchEvent e) {
+			public Player get(HologramClickEvent e) {
 				return e.getPlayer();
 			}
 		}, 0);
-		EventValues.registerEventValue(HologramLineTouchEvent.class, Hologram.class, new Getter<Hologram, HologramLineTouchEvent>() {
+		EventValues.registerEventValue(HologramClickEvent.class, Hologram.class, new Getter<Hologram, HologramClickEvent>() {
 			@Override
-			public Hologram get(HologramLineTouchEvent e) {
+			public Hologram get(HologramClickEvent e) {
 				return e.getHologram();
-			}
-		}, 0);
-		EventValues.registerEventValue(HologramLineTouchEvent.class, HologramLine.class, new Getter<HologramLine, HologramLineTouchEvent>() {
-			@Override
-			public HologramLine get(HologramLineTouchEvent e) {
-				return e.getHologramLine();
 			}
 		}, 0);
 	}
@@ -53,7 +43,7 @@ public class EvtHologramLineClick extends SkriptEvent {
 
 	@Override
 	public boolean check(Event e) {
-		return e instanceof HologramLineTouchEvent;
+		return e instanceof HologramClickEvent;
 	}
 
 	@Override

@@ -1,11 +1,5 @@
 package me.blueyescat.skriptholo.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -16,9 +10,13 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
+import java.util.ArrayList;
+import java.util.List;
 
 @Name("Hologram Line Number")
 @Description("Returns the number of a hologram line. But please note that getting line number of a hologram line " +
@@ -46,9 +44,9 @@ public class ExprHologramLineNumber extends SimpleExpression<Number> {
 	protected Number[] get(Event e) {
 		List<Number> numbers = new ArrayList<>();
 		for (HologramLine line : lines.getArray(e)) {
-			Hologram holo = line.getParent();
+			Hologram holo = line.getParent().getParent();
 			for (int l = 0; l < holo.size(); l++) {
-				if (holo.getLine(l).equals(line))
+				if (holo.getPage(0).getLine(l).equals(line))
 					numbers.add(l + 1);
 			}
 		}

@@ -1,9 +1,5 @@
 package me.blueyescat.skriptholo.skript.effects;
 
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -14,11 +10,13 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
-
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import me.blueyescat.skriptholo.util.Utils;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Add Hologram Line")
 @Description("Adds new lines to a hologram. " +
@@ -69,7 +67,7 @@ public class EffAddHologramLine extends Effect {
 	@Override
 	protected void execute(Event e) {
 		for (Hologram holo : holograms.getArray(e)) {
-			if (holo.isDeleted())
+			if (holo.isDisabled())
 				continue;
 			int li = 0;
 			if (mode == Modes.INSERT) {
@@ -81,28 +79,23 @@ public class EffAddHologramLine extends Effect {
 					continue;
 			}
 			for (Object line : lines.getArray(e)) {
-				HologramLine addedLine = null;
 				if (mode == Modes.PREPEND || mode == Modes.INSERT) {
 					if (mode == Modes.PREPEND)
 						li = 0;
 					if (line instanceof String) {
-						addedLine = holo.insertTextLine(li++, (String) line);
+						DHAPI.insertHologramLine(holo, li++, (String) line);
 					} else if (line instanceof ItemType) {
 						for (ItemStack item : ((ItemType) line).getItem().getAll())
-							addedLine = holo.insertItemLine(li++, item);
+							DHAPI.insertHologramLine(holo, li++, item);
 					}
 				} else {
 					if (line instanceof String) {
-						addedLine = holo.appendTextLine((String) line);
+						DHAPI.addHologramLine(holo, (String) line);
 					} else if (line instanceof ItemType) {
 						for (ItemStack item : ((ItemType) line).getItem().getAll())
-							addedLine = holo.appendItemLine(item);
+							DHAPI.addHologramLine(holo, item);
 					}
 				}
-				if (clickable)
-					Utils.addTouchHandler(addedLine);
-				if (touchable)
-					Utils.addPickupHandler(addedLine);
 			}
 		}
 	}
