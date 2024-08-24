@@ -1,4 +1,4 @@
-package me.blueyescat.skriptholo.skript;
+	package me.blueyescat.skriptholo.skript;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
@@ -15,6 +15,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import me.blueyescat.skriptholo.util.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
@@ -105,8 +106,7 @@ public class Types {
 								int i = 0;
 								for (HologramLine l : Utils.getHologramLines(holo)) {
 									if (l.equals(line)) {
-										line.delete();
-										DHAPI.insertHologramLine(holo, i, (String) o);
+										DHAPI.setHologramLine(holo, i, (String) o);
 									}
 									i++;
 								}
@@ -121,8 +121,7 @@ public class Types {
 								int i = 0;
 								for (HologramLine l : Utils.getHologramLines(holo)) {
 									if (l.equals(line)) {
-										line.delete();
-										DHAPI.insertHologramLine(holo, i, ((ItemType) o).getItem().getRandom());
+										DHAPI.setHologramLine(holo, i, ((ItemType) o).getItem().getRandom());
 									}
 									i++;
 								}

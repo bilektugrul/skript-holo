@@ -24,7 +24,7 @@ public class Utils {
 
 	public static List<HologramLine> getHologramLines(Hologram holo) {
 		List<HologramLine> lines = new ArrayList<>();
-		for (int l = 0; l < holo.size(); l++)
+		for (int l = 0; l < holo.getPage(0).getLines().size(); l++)
 			lines.add(holo.getPage(0).getLine(l));
 		return lines;
 	}

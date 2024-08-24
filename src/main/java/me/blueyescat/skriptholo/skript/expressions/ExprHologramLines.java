@@ -86,18 +86,23 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 					lines.addAll(Utils.getHologramLines(holo));
 				// First/Last Line
 				} else {
-					int line = firstLine.isTrue() ? 0 : holo.size() - 1;
+					int line = firstLine.isTrue() ? 0 : holo.getPage(0).getLines().size() - 1;
 					lines.add(holo.getPage(0).getLine(line));
 				}
 			// Line x
 			} else {
 				Number line = this.line.getSingle(e);
-				if (line == null)
+				if (line == null) {
 					continue;
-				int li = line.intValue() - 1;
-				if (!(li >= 0 && li < holo.size()))
+				}
+
+				int li = line.intValue();
+				/*if (!(li >= 0 && li < holo.getPage(0).getLines().size())) {
+					// 0dan büyük veya 0 ise ve de hologramın satır sayısından küçükse
+					System.out.println("condition cant pass");
 					continue;
-				lines.add(holo.getPage(0).getLine(li));
+				}*/
+				lines.add(holo.getPage(0).getLine(li - 1));
 			}
 		}
 		return lines.toArray(new HologramLine[0]);
@@ -147,7 +152,7 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 					for (Hologram holo : holograms.getArray(e)) {
 						if (holo.isDisabled())
 							continue;
-						for (int line = 0; line < holo.size(); line++) {
+						for (int line = 0; line < holo.getPage(0).getLines().size(); line++) {
 							removedLine = holo.getPage(0).getLine(line);
 							for (Object o : delta) {
 								if (o instanceof String) {
@@ -199,20 +204,25 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 				Number line = this.line.getSingle(e);
 				if (line != null) {
 					int li = line.intValue();
-					if (li <= 0)
+					if (li <= 0) {
 						return;
+					}
 					for (Hologram holo : holograms.getArray(e)) {
-						if (holo.isDisabled())
+						if (holo.isDisabled()) {
 							continue;
-						if (li > holo.size()) {
-							int size = holo.size();
-							for (int i = 0; i < ((li - 1) - size); i++)
+						}
+
+						int size = holo.getPage(0).getLines().size();
+						if (li > size) {
+							for (int i = 0; i < li - size; i++) {
 								DHAPI.addHologramLine(holo, "");
+							}
 							Object o = delta[0];
-							if (o instanceof String)
-								DHAPI.addHologramLine(holo, (String) o);
-							else
-								DHAPI.addHologramLine(holo, ((ItemType) o).getItem().getRandom());
+							if (o instanceof String) {
+								DHAPI.setHologramLine(holo, li - 1, (String) o);
+							} else {
+								DHAPI.setHologramLine(holo, li - 1, ((ItemType) o).getItem().getRandom());
+							}
 						} else {
 							Types.hologramLineChanger.change(CollectionUtils.array(holo.getPage(0).getLine(li - 1)), delta, ChangeMode.SET);
 						}

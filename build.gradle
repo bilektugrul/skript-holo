@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'me.blueyescat.skriptholo'
-version '1.0.3-dh'
+version '1.0.4-dh'
 
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
