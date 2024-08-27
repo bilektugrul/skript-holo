@@ -1,9 +1,17 @@
 package me.blueyescat.skriptholo;
 
-import java.util.Map;
-
+import ch.njol.skript.Skript;
+import ch.njol.skript.util.Direction;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import me.blueyescat.skriptholo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -14,19 +22,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.util.Direction;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
-
-
-import me.blueyescat.skriptholo.util.Utils;
+import java.util.Map;
 
 public class FollowingHologramListeners implements Listener {
 

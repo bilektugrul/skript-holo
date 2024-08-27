@@ -1,4 +1,4 @@
-	package me.blueyescat.skriptholo.skript;
+package me.blueyescat.skriptholo.skript;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
@@ -17,7 +17,6 @@ import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import me.blueyescat.skriptholo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 public class Types {
@@ -48,9 +47,10 @@ public class Types {
 							Utils.deleteHologram(holograms);
 						} else {
 							for (Hologram holo : holograms) {
-								if (!holo.isDisabled())
+								if (!holo.isDisabled()) {
 									holo.removePage(0);
 									holo.addPage();
+								}
 							}
 						}
 					}
@@ -99,7 +99,7 @@ public class Types {
 						Object o = delta[0];
 						if (o instanceof String) {
 							if (line.getType() == HologramLineType.TEXT) {
-								line.setText((String) o);
+								DHAPI.setHologramLine(line, (String) o);
 							// Find the line and make it TextLine
 							} else {
 								Hologram holo = line.getParent().getParent();
@@ -114,7 +114,7 @@ public class Types {
 
 						} else {
 							if (line.getType() == HologramLineType.ICON) {
-								line.setItem(HologramItem.fromItemStack(((ItemType) o).getItem().getRandom()));
+								DHAPI.setHologramLine(line, ((ItemType) o).getItem().getRandom());
 							// Find the line and make it ItemLine
 							} else {
 								Hologram holo = line.getParent().getParent();

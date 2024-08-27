@@ -21,6 +21,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import me.blueyescat.skriptholo.skript.Types;
 import me.blueyescat.skriptholo.util.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
@@ -207,6 +208,7 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 					if (li <= 0) {
 						return;
 					}
+
 					for (Hologram holo : holograms.getArray(e)) {
 						if (holo.isDisabled()) {
 							continue;

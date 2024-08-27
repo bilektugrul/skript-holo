@@ -12,8 +12,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
-import eu.decentsoftware.holograms.api.holograms.HologramLine;
-import me.blueyescat.skriptholo.util.Utils;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
