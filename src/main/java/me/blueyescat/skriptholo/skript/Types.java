@@ -3,21 +3,19 @@ package me.blueyescat.skriptholo.skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.Converter;
+import org.skriptlang.skript.lang.converter.Converter;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.Converters;
+import org.skriptlang.skript.lang.converter.Converters;
 import ch.njol.util.coll.CollectionUtils;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
-import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import me.blueyescat.skriptholo.util.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class Types {
 
@@ -55,27 +53,23 @@ public class Types {
 						}
 					}
 				})
-				.parser(new Parser<Hologram>() {
-					@Override
-					public boolean canParse(ParseContext context) {
-						return false;
-					}
+				.parser(new Parser<>() {
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
+                    }
 
-					@Override
-					public String toString(Hologram holo, int flags) {
-						return "hologram";
-					}
+                    @Override
+                    public String toString(Hologram holo, int flags) {
+                        return "hologram";
+                    }
 
-					@Override
-					public String toVariableNameString(Hologram holo) {
-						return "hologram";
-					}
+                    @Override
+                    public String toVariableNameString(Hologram holo) {
+                        return "hologram";
+                    }
 
-					@Override
-					public String getVariableNamePattern() {
-						return "\\S+";
-					}
-				}));
+                }));
 
 		Converters.registerConverter(Hologram.class, Location.class, (Converter<Hologram, Location>) Hologram::getLocation);
 
@@ -164,16 +158,11 @@ public class Types {
 							return "hologram item line";
 						return "hologram line";
 					}
-
-					@Override
-					public String getVariableNamePattern() {
-						return "\\S+";
-					}
 				}));
 
 		Converters.registerConverter(HologramLine.class, String.class, (Converter<HologramLine, String>) line -> line.getType() == HologramLineType.TEXT ? line.getText() : null);
 		Converters.registerConverter(HologramLine.class, ItemType.class, (Converter<HologramLine, ItemType>) line -> line.getType() == HologramLineType.ICON
-				? new ItemType(line.getItem().getMaterial().getId()) : null);
+				? new ItemType(line.getItem().getMaterial()) : null);
 
 	}
 

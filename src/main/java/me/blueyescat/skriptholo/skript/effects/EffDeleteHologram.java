@@ -12,7 +12,7 @@ import ch.njol.util.Kleenean;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.blueyescat.skriptholo.util.Utils;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Delete Hologram")
 @Description({"Deletes a hologram. The hologram type has the delete changer already, but this effect exists for variables. " +

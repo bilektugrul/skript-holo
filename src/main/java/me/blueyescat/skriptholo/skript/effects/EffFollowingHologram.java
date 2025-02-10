@@ -12,7 +12,7 @@ import me.blueyescat.skriptholo.FollowingHologramListeners;
 import me.blueyescat.skriptholo.util.Utils;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Following Hologram")
 @Description("Makes a hologram start/stop following an entity.")

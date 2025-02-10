@@ -9,7 +9,7 @@ import ch.njol.util.Kleenean;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.blueyescat.skriptholo.util.Utils;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Is Hologram Visible by Default")
 @Description("Checks whether the given hologram is visible by default.")

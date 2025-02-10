@@ -12,7 +12,7 @@ import ch.njol.util.Kleenean;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Is Text/Item Line")
 @Description("Checks whether the given hologram line is a text line or an item line. " +

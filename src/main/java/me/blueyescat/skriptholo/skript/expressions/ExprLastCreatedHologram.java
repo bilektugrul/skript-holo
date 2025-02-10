@@ -16,7 +16,7 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.blueyescat.skriptholo.skript.effects.EffCreateHologram;
 import me.blueyescat.skriptholo.util.Utils;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Last Created Hologram")
 @Description({"Holds the hologram that was created most recently with the `Create Hologram` effect.",

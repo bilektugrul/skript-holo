@@ -11,7 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.registrations.Converters;
+import org.skriptlang.skript.lang.converter.Converters;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -19,7 +19,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import me.blueyescat.skriptholo.skript.Types;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -87,7 +87,7 @@ public class ExprHologramLineContent<T> extends SimpleExpression<T> {
 					contents.add(line.getText());
 			} else if (line.getType() == HologramLineType.ICON) {
 				if (type == 0 || type == 2)
-					contents.add(new ItemType(line.getItem().getMaterial().getId()));
+					contents.add(new ItemType(line.getItem().getMaterial()));
 			}
 		}
 		try {

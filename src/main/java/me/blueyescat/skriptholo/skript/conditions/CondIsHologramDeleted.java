@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Is Hologram Deleted")
 @Description("Checks whether the given hologram is deleted. " +

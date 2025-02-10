@@ -10,7 +10,7 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.blueyescat.skriptholo.util.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Can See Hologram")
 @Description("Checks whether the given players can see the given holograms. " +

@@ -10,7 +10,7 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.blueyescat.skriptholo.util.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Hologram Visibility")
 @Description("Changes visibility of a hologram for the given players or makes a hologram invisible/visible by default." +
