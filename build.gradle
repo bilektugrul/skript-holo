@@ -28,7 +28,7 @@ repositories {
 dependencies {
 	implementation 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
 	implementation 'com.github.SkriptLang:Skript:dev36'
-	compileOnly 'com.github.DecentSoftware-eu:DecentHolograms:2.8.9'
+	compileOnly 'com.github.DecentSoftware-eu:DecentHolograms:2.8.11'
 	implementation 'com.comphenix.protocol:ProtocolLib:5.1.0'
 }
 

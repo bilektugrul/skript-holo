@@ -76,7 +76,7 @@ public class EffCreateHologram extends Effect {
 			if (exprs[3] instanceof Variable) {
 				variable = (Variable<?>) exprs[3];
 			} else {
-				Skript.error(exprs[3].toString() + " is not a variable");
+				Skript.error(exprs[3] + " is not a variable");
 				return false;
 			}
 		}

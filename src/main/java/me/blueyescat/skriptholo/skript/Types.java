@@ -92,8 +92,9 @@ public class Types {
 			@Override
 			public void change(HologramLine[] lines, @Nullable Object[] delta, ChangeMode mode) {
 				if (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
-					for (HologramLine line : lines)
+					for (HologramLine line : lines) {
 						line.delete();
+					}
 				} else {
 					for (HologramLine line : lines) {
 						Object o = delta[0];

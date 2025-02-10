@@ -47,7 +47,7 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 		Skript.registerExpression(ExprHologramLines.class, HologramLine.class, ExpressionType.PROPERTY,
 				"[all] [the] lines of [holo[gram][s]] %holograms%",
 				"%holograms%'[s] [all] lines",
-				"[the] line %number% of [holo[gram][s]] %holograms%",
+				"[the] [holo[gram][s]] line %number% of [holo[gram][s]] %holograms%",
 				"[the] %number%(st|nd|rd|th) line[s] of [holo[gram][s]] %holograms%",
 				"[the] (first|1¦last) line[s] of [holo[gram][s]] %holograms%");
 	}
@@ -83,12 +83,12 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 		for (Hologram holo : holograms.getArray(e)) {
 			if (this.line == null) {
 				// All lines
-				if (firstLine.isUnknown()) {
+				if (allLines) {
 					lines.addAll(Utils.getHologramLines(holo));
 				// First/Last Line
 				} else {
 					int line = firstLine.isTrue() ? 0 : holo.getPage(0).getLines().size() - 1;
-					lines.add(holo.getPage(0).getLine(line));
+					lines.add(DHAPI.getHologramLine(DHAPI.getHologramPage(holo, 0), line));
 				}
 			// Line x
 			} else {
@@ -103,7 +103,7 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 					System.out.println("condition cant pass");
 					continue;
 				}*/
-				lines.add(holo.getPage(0).getLine(li - 1));
+				lines.add(DHAPI.getHologramLine(DHAPI.getHologramPage(holo, 0), li - 1));
 			}
 		}
 		return lines.toArray(new HologramLine[0]);
@@ -151,8 +151,9 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 				case REMOVE_ALL:
 					HologramLine removedLine;
 					for (Hologram holo : holograms.getArray(e)) {
-						if (holo.isDisabled())
+						if (holo.isDisabled()) {
 							continue;
+						}
 						for (int line = 0; line < holo.getPage(0).getLines().size(); line++) {
 							removedLine = holo.getPage(0).getLine(line);
 							for (Object o : delta) {
@@ -175,16 +176,19 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 					break;
 				case SET:
 					for (Hologram holo : holograms.getArray(e)) {
-						if (holo.isDisabled())
+						if (holo.isDisabled()) {
 							continue;
-						holo.removePage(0);
-						holo.addPage();
+						}
+
+						DHAPI.removeHologramPage(holo, 0);
+						DHAPI.addHologramPage(holo);
 						for (Object o : delta) {
 							if (o instanceof String) {
 								DHAPI.addHologramLine(holo, (String) o);
 							} else {
-								for (ItemStack item : ((ItemType) o).getItem().getAll())
+								for (ItemStack item : ((ItemType) o).getItem().getAll()) {
 									DHAPI.addHologramLine(holo, item);
+								}
 							}
 						}
 					}
@@ -193,8 +197,8 @@ public class ExprHologramLines extends SimpleExpression<HologramLine> {
 				case RESET:
 					for (Hologram holo : holograms.getArray(e)) {
 						if (!holo.isDisabled()) {
-							holo.removePage(0);
-							holo.addPage();
+							DHAPI.removeHologramPage(holo, 0);
+							DHAPI.addHologramPage(holo);
 						}
 					}
 			}
